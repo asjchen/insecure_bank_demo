@@ -1,0 +1,19 @@
+$def with (login_errors, register_link, csrf_token)
+
+$if 'wrong_combination' in login_errors:
+    <h4>Your username and password combination is incorrect. Go away, hacker!</h4>
+
+<form method="POST">
+	<input type="hidden" name="csrf_token" value="$csrf_token()"/>
+	<div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" name="username" id="username" />
+    </div>
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input type="text" name="password" id="password" />
+    </div>
+    <div><input type="submit" value="Login" /></div>
+</form>
+
+New to the bank? Please <a href="$register_link">register</a>.

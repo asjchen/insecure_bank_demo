@@ -2,6 +2,7 @@
 
 # Major flaws of this system include:
 # - SQL injection (an adversary could display the table of user accounts)
+# - As a corollary, certain usernames will cause the SQL queries to not function correctly
 # - SHA-1 hashing instead of slow hashing, such as bcrypt (though for large 
 #	user databases, this could require client-side hashing. However, an attacker
 #	who stole the table of users and password hashes could then send a hash
@@ -11,24 +12,25 @@ import sys; sys.path.insert(0, 'lib')
 import os                             
 import web
 import random
+from itertools import chain
 import hashlib
 import binascii
 
-urls = (
-	'/register', 'Register'
-	#,
-	#'/login', 'Login',
-	#'/profile', 'Profile'
-	)
+url_dict = { 
+	'Index': '/', \
+	'Login': '/login', \
+	'Register': '/register', \
+	'RegistrationSuccess': '/registration_success', \
+	'Profile': '/profile',
+	'Logout': '/logout'
+	}
+urls = tuple(chain.from_iterable([(url_dict[x], x) for x in url_dict]))
 
-
-# in sql, use UNHEX() and HEX() when storing, retrieving from database
-# figure out how to store binary?
-# USE CSRF!!!!!
 web.config.debug = False
 db = web.database(dbn='sqlite', db='BankAccount.db')
 app = web.application(urls, globals())
-session = web.session.Session(app, web.session.DiskStore('sessions'))
+store = web.session.DiskStore('sessions')
+session = web.session.Session(app, store, initializer={'user': None})
 
 def csrf_token():
 	if not session.has_key('csrf_token'):
@@ -43,7 +45,7 @@ def csrf_protected(f):
 			raise web.HTTPError(
 				"400 Bad request",
 				{'content-type':'text/html'},
-				'Cross-site request forgery (CSRF) attempt (or stale browser form). <a href=\"/register\">Back to the form</a>') 
+				'Cross-site request forgery (CSRF) attempt (or stale browser form). <a href=\"' + url_dict['Register'] + '\">Back to the form</a>') 
 		return f(*args,**kwargs)
 	return decorated
 
@@ -56,11 +58,17 @@ def query_database(query_string):
 	except Exception as e:
 		return []
 
-def find_account(username):
-	query_string = 'SELECT * FROM BankAccount WHERE Username = \'' + username + '\''
-	return query_database(query_string)
-
-#def authenticate(username, password):
+# Normally, we would want to check to make sure only one user is returned!
+def authenticate(username, password):
+	salt_query_string = 'SELECT Salt FROM BankAccount WHERE Username = \'' + username + '\''
+	salt_query_results = query_database(salt_query_string)
+	if salt_query_results == []:
+		return False
+	salt = salt_query_results[-1].Salt
+	candidate_hash = hashlib.sha1(password + salt).hexdigest()
+	auth_query_string = salt_query_string + ' AND PasswordHash = \'' + candidate_hash + '\''
+	auth_query_results = query_database(auth_query_string)
+	return (auth_query_results != [])
 
 def make_salt():
 	return ''.join([chr(random.randint(33, 127)) for i in range(8)])
@@ -71,10 +79,28 @@ def make_account(username, password):
 	db.insert('BankAccount', Username=username, Salt=salt,
 		PasswordHash=password_hash, Amount=random.randint(0, 999999999))
 
+def get_profile(username):
+	amount_query_string = 'SELECT Amount FROM BankAccount WHERE Username = \'' + username + '\''
+	amount_query = query_database(amount_query_string)
+	if amount_query == []:
+		return None
+	return amount_query[-1].Amount
+
+class Index:
+	def GET(self):
+		if session.user == None:
+			links = {'Login': url_dict['Login'], 'Register': url_dict['Register']}
+		else:
+			links = {'Profile': url_dict['Profile'], 'Logout': url_dict['Logout']}
+		return render.index(links)
+
 class Register:
 	def GET(self):
-		registration_errors = {}
-		return render.register(registration_errors, csrf_token)
+		if session.user == None:
+			registration_errors = {}
+			return render.register(registration_errors, csrf_token)
+		else:
+			raise web.seeother(url_dict['Profile'])
 
 	@csrf_protected
 	def POST(self):
@@ -85,16 +111,55 @@ class Register:
 		if password1 != password2:
 			registration_errors = {'mismatched_passwords': True}
 			return render.register(registration_errors, csrf_token)
-		if find_account(username) != []:
+		if find_salt(username) != []:
 			registration_errors = {'username_taken': True, 'username': username}
 			return render.register(registration_errors, csrf_token)
 		make_account(username, password1)
-		
-		registration_errors = {}
-		return render.register(registration_errors, csrf_token)
+		raise web.seeother(url_dict['RegistrationSuccess'])
+
+class RegistrationSuccess:
+	def GET(self):
+		login_link = url_dict['Login']
+		return render.registration_success(login_link)
+
+class Login:
+	def GET(self):
+		if session.user == None:
+			login_errors = {}
+			register_link = url_dict['Register']
+			return render.login(login_errors, register_link, csrf_token)
+		else:
+			raise web.seeother(url_dict['Profile'])
+
+	@csrf_protected
+	def POST(self):
+		params = web.input()
+		username = params['username'].strip()
+		password = params['password'].strip()
+		if authenticate(username, password):
+			session.user = username
+			raise web.seeother(url_dict['Profile'])
+		else:
+			login_errors = {'wrong_combination'}
+			register_link = url_dict['Register']
+			return render.login(login_errors, register_link, csrf_token)
+
+class Profile:
+	def GET(self):
+		if session.user == None:
+			raise web.seeother(url_dict['Login'])
+		else:
+			amount = get_profile(session.user)
+			logout_link = url_dict['Logout']
+			return render.profile(session.user, amount, logout_link)
+
+class Logout:
+	def GET(self):
+		if session.user != None:
+			session.user = None
+		raise web.seeother(url_dict['Login'])
 
 if __name__ == '__main__':
-	#web.internalerror = web.debugerror  
 	app.run()
 
 

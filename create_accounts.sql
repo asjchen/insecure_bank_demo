@@ -6,3 +6,4 @@ CREATE TABLE BankAccount(
 	PasswordHash	CHAR(40) NOT NULL,
 	Amount			MONEY
 );
+INSERT INTO BankAccount VALUES('admin', '*Utf&+s5', 'd97e0269f76f350d85c09244cffd41439fe90a99', 0);
