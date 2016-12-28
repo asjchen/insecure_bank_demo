@@ -71,7 +71,7 @@ def authenticate(username, password):
 	return (auth_query_results != [])
 
 def make_salt():
-	return ''.join([chr(random.randint(33, 127)) for i in range(8)])
+	return ''.join([chr(random.randint(37, 127)) for i in range(8)])
 
 def make_account(username, password):
 	salt = make_salt()

@@ -28,7 +28,23 @@ the username to be:
 
 (The password can be any string.) This allows us to see all of the users' 
 salts and password hashes, which are SHA-1 for this purpose. We then use 
-John the Ripper to expose any weak passwords.
+John the Ripper (JTR) to expose any weak passwords. Despite each account 
+having its own salt, JTR can crack salted SHA-1 hashes in a single file.
+To do so, create a blank password file, and format each username/salt/hash 
+combination on each line (without the brackets):
+
+[username]:$dynamic_24$[hash]$[salt]
+
+For example:
+
+admin:$dynamic_24$d97e0269f76f350d85c09244cffd41439fe90a99$*Utf&+s5
+
+Then, run JTR to recover some of the passwords:
+
+./john --incremental [password file]
+./john --show [password file] 
+
+Here, we use the MacOS version of John 1.7.9-jumbo-7.
 
 
 Disclaimer
