@@ -1,0 +1,24 @@
+$def with (registration_errors, csrf_token)
+
+$if 'username_taken' in registration_errors and 'username' in registration_errors:
+    <h4>The username "$registration_errors['username']" is already taken.</h4>
+
+$if 'mismatched_passwords' in registration_errors:
+    <h4>Your passwords did not match.</h4>    
+
+<form method="POST">
+	<input type="hidden" name="csrf_token" value="$csrf_token()"/>
+	<div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" name="username" id="username" />
+    </div>
+    <div class="form-group">
+        <label for="password1">Password</label>
+        <input type="text" name="password1" id="password1" />
+    </div>
+    <div class="form-group">
+        <label for="password2">Confirm Password</label>
+        <input type="text" name="password2" id="password2" />
+    </div>
+    <div><input type="submit" value="Register" /></div>
+</form>
