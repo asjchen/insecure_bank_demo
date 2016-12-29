@@ -9,7 +9,8 @@ simplified model of how password hashing and SQL injection can work.
 Get Started
 -----------
 
-Begin by creating the database of user accounts:
+As a prerequisite, make sure you have web.py (version 0.3) and SQLite 
+capabilities. Begin by creating the database of user accounts:
 
 sqlite3 BankAccount.db < create_accounts.sql
 
