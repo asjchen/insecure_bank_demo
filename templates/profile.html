@@ -1,8 +1,13 @@
-$def with (username, amount, logout_link)
+$def with (links, username, amount)
+$var home_link_name = links[0][0]
+$var home_link_url = links[0][1]
+$var log_link_name = links[1][0]
+$var log_link_url = links[1][1]
+$var account_link_name = links[2][0]
+$var account_link_url = links[2][1]
 
-<h3>$username</h3>
+<h2>$username</h2>
 Current Amount: \$ $amount
 
-<a href="$logout_link">Logout</a>
 
 

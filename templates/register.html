@@ -1,5 +1,12 @@
-$def with (registration_errors, csrf_token)
+$def with (links, registration_errors, csrf_token)
+$var home_link_name = links[0][0]
+$var home_link_url = links[0][1]
+$var log_link_name = links[1][0]
+$var log_link_url = links[1][1]
+$var account_link_name = links[2][0]
+$var account_link_url = links[2][1]
 
+<h2>Registration</h2>
 $if 'username_taken' in registration_errors and 'username' in registration_errors:
     <h4>The username "$registration_errors['username']" is already taken.</h4>
 
@@ -14,11 +21,11 @@ $if 'mismatched_passwords' in registration_errors:
     </div>
     <div class="form-group">
         <label for="password1">Password</label>
-        <input type="text" name="password1" id="password1" />
+        <input type="password" name="password1" id="password1" />
     </div>
     <div class="form-group">
         <label for="password2">Confirm Password</label>
-        <input type="text" name="password2" id="password2" />
+        <input type="password" name="password2" id="password2" />
     </div>
     <div><input type="submit" value="Register" /></div>
 </form>

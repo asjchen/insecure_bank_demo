@@ -1,0 +1,68 @@
+$def with (content)
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700,600,800' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="static/foundation/css/foundation.css">
+		<link type="text/css" rel="stylesheet" href="static/HomeStyle.css"/>
+		<script src="static/foundation/js/vendor/modernizr.js"></script>
+		<title> Welcome to Anaflow Bank! </title>
+	</head>
+
+	<body>
+		<div id="header">
+			<div id="header-row" class="row">
+				<div id="logo" class="medium-4 large-3 columns">
+					<img src="http://placehold.it/128x128"/>
+				</div>
+				<div class="navbar medium-8 large-9 columns">
+					<ul class="navmenu">
+						<li> 
+							<a href="$:content.get("home_link_url")"> $:content.get("home_link_name") </a> 
+						</li>
+						<li> 
+							<a href="$:content.get("log_link_url")"> $:content.get("log_link_name") </a>
+						</li>
+						<li> 
+							<a href="$:content.get("account_link_url")"> $:content.get("account_link_name") </a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			
+
+		</div>
+
+		<div class="main">
+			<div class="layer1">
+				<div class="row">
+					<div id="intro" class="medium-12 large-9 columns">
+						$:content
+					</div>
+					<div class="right medium-12 large-3 columns">
+						<div class="newsbar">
+							<h3>NEWS</h3>
+							<div class="news">
+								<h4>We're alive!</h4>
+								<p>More details to be posted at a later date.</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		<div class="layer3">
+			<div class="row">
+				<div class="footer medium-12 large-12 columns">
+				</div>
+			</div>
+		</div>
+
+		<script src="static/foundation/js/vendor/jquery.js"></script>
+	 	<script src="static/foundation/js/foundation.min.js"></script>
+ 		<script>
+   	 		jQuery(document).foundation();
+  		</script>
+	</body>
+</html>

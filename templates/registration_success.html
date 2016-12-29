@@ -1,3 +1,10 @@
-$def with (login_link)
+$def with (links, login_link)
+$var home_link_name = links[0][0]
+$var home_link_url = links[0][1]
+$var log_link_name = links[1][0]
+$var log_link_url = links[1][1]
+$var account_link_name = links[2][0]
+$var account_link_url = links[2][1]
 
-<h3>Registration Successful! Please return to the <a href="$login_link">login page</a>.</h3> 
+<h2>Registration Successful!</h2>
+<p>Please return to the <a href="$login_link">login page</a>.</p> 

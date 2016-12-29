@@ -1,5 +1,12 @@
-$def with (login_errors, register_link, csrf_token)
+$def with (links, login_errors, register_link, csrf_token)
+$var home_link_name = links[0][0]
+$var home_link_url = links[0][1]
+$var log_link_name = links[1][0]
+$var log_link_url = links[1][1]
+$var account_link_name = links[2][0]
+$var account_link_url = links[2][1]
 
+<h2>Login</h2>
 $if 'wrong_combination' in login_errors:
     <h4>Your username and password combination is incorrect. Go away, hacker!</h4>
 
@@ -11,7 +18,7 @@ $if 'wrong_combination' in login_errors:
     </div>
     <div class="form-group">
         <label for="password">Password</label>
-        <input type="text" name="password" id="password" />
+        <input type="password" name="password" id="password" />
     </div>
     <div><input type="submit" value="Login" /></div>
 </form>
