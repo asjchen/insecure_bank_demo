@@ -1,13 +1,16 @@
 #!/usr/bin/env python
 
-# Major flaws of this system include:
-# - SQL injection (an adversary could display the table of user accounts)
-# - As a corollary, certain usernames will cause the SQL queries to not function correctly
-# - SHA-1 hashing instead of slow hashing, such as bcrypt (though for large 
-#	user databases, this could require client-side hashing. However, an attacker
-#	who stole the table of users and password hashes could then send a hash
-#	directly to the server and successfully login.)
-# - Lack of security checks, mainly in the Python web.py backend
+"""
+Major flaws of this system include:
+- SQL injection (an adversary could display the table of user accounts)
+- As a corollary, certain usernames will cause the SQL queries to not 
+  function correctly
+- SHA-1 hashing instead of slow hashing, such as bcrypt (though for large 
+  user databases, this could require client-side hashing. However, an attacker
+  who stole the table of users and password hashes could then send a hash
+  directly to the server and successfully login.)
+- Lack of security checks, mainly in the Python web.py backend
+"""
 
 import sys
 import os                             
@@ -42,7 +45,8 @@ def csrf_token():
 def csrf_protected(f):
 	def decorated(*args, **kwargs):
 		inp = web.input()
-		if not (inp.has_key('csrf_token') and inp.csrf_token == session.pop('csrf_token', None)):
+		if not (inp.has_key('csrf_token') and \
+			inp.csrf_token == session.pop('csrf_token', None)):
 			raise web.HTTPError(
 				"400 Bad request",
 				{'content-type':'text/html'},
@@ -132,7 +136,7 @@ class RegistrationSuccess:
 	def GET(self):
 		links = get_links()
 		login_link = url_dict['Login']
-		return render.registration_success(links, login_link)
+		return render.registration_success(links, login_link, csrf_token)
 
 class Login:
 	def GET(self):
