@@ -64,7 +64,7 @@ def query_database(query_string):
 		return []
 
 def find_salt(username):
-	salt_query_string = 'SELECT Salt FROM BankAccount WHERE Username = \'' + username + '\''
+	salt_query_string = 'SELECT Salt FROM BankAccount WHERE Username = \'{0}\''.format(username)
 	return query_database(salt_query_string)
 
 # Normally, we would want to check to make sure only one user is returned!
@@ -74,7 +74,7 @@ def authenticate(username, password):
 		return False
 	salt = salt_query_results[-1].Salt
 	candidate_hash = hashlib.sha1(password + salt).hexdigest()
-	auth_query_string = 'SELECT Salt FROM BankAccount WHERE Username = \'' + username + '\' AND PasswordHash = \'' + candidate_hash + '\''
+	auth_query_string = 'SELECT Salt FROM BankAccount WHERE Username = \'{0}\' AND PasswordHash = \'{1}\''.format(username, candidate_hash)
 	auth_query_results = query_database(auth_query_string)
 	return (auth_query_results != [])
 
@@ -88,7 +88,7 @@ def make_account(username, password):
 		PasswordHash=password_hash, Amount=random.randint(0, 999999999))
 
 def get_profile(username):
-	amount_query_string = 'SELECT Amount FROM BankAccount WHERE Username = \'' + username + '\''
+	amount_query_string = 'SELECT Amount FROM BankAccount WHERE Username = \'{0}\''.format(username)
 	amount_query = query_database(amount_query_string)
 	if amount_query == []:
 		return None
@@ -136,7 +136,7 @@ class RegistrationSuccess:
 	def GET(self):
 		links = get_links()
 		login_link = url_dict['Login']
-		return render.registration_success(links, login_link, csrf_token)
+		return render.registration_success(links, login_link)
 
 class Login:
 	def GET(self):
