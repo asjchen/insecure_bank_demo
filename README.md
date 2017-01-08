@@ -42,13 +42,17 @@ For example:
 
 admin:$dynamic_24$d97e0269f76f350d85c09244cffd41439fe90a99$*Utf&+s5
 
-Then, run JTR to recover some of the passwords:
+Then, run JTR to recover some of the passwords. In the MacOS version of John 1.7.9-jumbo-7:
 
 ./john --incremental [password file]
+
 ./john --show [password file] 
 
-Here, we use the MacOS version of John 1.7.9-jumbo-7.
+and in the Windows version of John 1.7.9-jumbo-7-Win-32:
 
+john --incremental [password file]
+
+john --show [password file] 
 
 Disclaimer
 ----------
