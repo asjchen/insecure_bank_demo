@@ -42,7 +42,7 @@ For example:
 
 admin:$dynamic_24$d97e0269f76f350d85c09244cffd41439fe90a99$*Utf&+s5
 
-Then, run JTR to recover some of the passwords. In the MacOS version of John 1.7.9-jumbo-7:
+Then, run JTR to recover some of the passwords. In the MacOS version of John 1.7.9-jumbo-7 (see http://openwall.info/wiki/john/custom-builds#Compiled-for-Mac-OS-X):
 
 ./john --incremental [password file]
 
