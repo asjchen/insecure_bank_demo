@@ -9,4 +9,4 @@ CREATE TABLE BankAccount(
 	Amount			MONEY
 );
 INSERT INTO BankAccount VALUES('admin', '*Utf&+s5', 
-	'd97e0269f76f350d85c09244cffd41439fe90a99', 0);
+	'317fe16a5f409e871b21c3460a75dab8dc906767', 0);

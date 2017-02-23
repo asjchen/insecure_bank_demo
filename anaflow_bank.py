@@ -74,7 +74,7 @@ def authenticate(username, password):
 	if salt_query_results == []:
 		return False
 	salt = salt_query_results[-1].Salt
-	candidate_hash = hashlib.sha1(password + salt).hexdigest()
+	candidate_hash = hashlib.sha1(salt + password).hexdigest()
 	auth_query_string = 'SELECT Salt FROM BankAccount '\
 		'WHERE Username = \'{0}\' ' \
 		'AND PasswordHash = \'{1}\''.format(username, candidate_hash)
@@ -86,7 +86,7 @@ def make_salt():
 
 def make_account(username, password):
 	salt = make_salt()
-	password_hash = hashlib.sha1(password + salt).hexdigest()
+	password_hash = hashlib.sha1(salt + password).hexdigest()
 	db.insert('BankAccount', Username=username, Salt=salt,
 		PasswordHash=password_hash, Amount=random.randint(0, 999999999))
 
