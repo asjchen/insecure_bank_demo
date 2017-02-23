@@ -34,7 +34,11 @@ salts and password hashes, which are SHA-1 for this purpose. We then use
 John the Ripper (JTR) to expose any weak passwords. Despite each account 
 having its own salt, JTR can crack salted SHA-1 hashes in a single file.
 To do so, create a blank password file, and format each username/salt/hash 
-combination on each line (without the brackets):
+combination on each line (without the brackets).
+
+In the MacOS version of John 1.7.9-jumbo-7 (see 
+http://openwall.info/wiki/john/custom-builds#Compiled-for-Mac-OS-X), 
+format each line of the password file as:
 
 [username]:$SHA1p$[salt]$[hash]
 
@@ -42,17 +46,29 @@ For example:
 
 admin:$SHA1p$*Utf&+s5$317fe16a5f409e871b21c3460a75dab8dc906767
 
-Then, run JTR to recover some of the passwords. In the MacOS version of John 1.7.9-jumbo-7 (see http://openwall.info/wiki/john/custom-builds#Compiled-for-Mac-OS-X):
+Then, run JTR to recover some of the passwords. 
 
 ./john --format=sha1-gen [password file]
 
 ./john --show [password file] 
 
-and in the Windows version of John 1.7.9-jumbo-7-Win-32:
 
-john --format=sha1-gen [password file]
+For the Windows version of John 1.7.9-jumbo-7-Win-32 (see 
+http://openwall.info/wiki/john/custom-builds#Compiled-for-Windows).
+format each line of the password file as:
+
+[username]:$dynamic_25$[hash]$[salt]
+
+For example:
+
+admin:$dynamic_25$317fe16a5f409e871b21c3460a75dab8dc906767$*Utf&+s5
+
+Then, run JTR to recover some of the passwords. 
+
+john [password file]
 
 john --show [password file] 
+
 
 Disclaimer
 ----------
