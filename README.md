@@ -2,10 +2,10 @@ Anaflow Bank (Insecure Website)
 -------------------------------
 
 This website is a demonstration in a cryptography workshop at Independence 
-High School, run by Andy Chen and Nick Hirning. It is meant to serve as a
-simplified model of how password hashing and SQL injection can work. The code
-creates a dummy website "Anaflow Bank" whose data can be compromised with a SQL
-injection.
+High School and Stanford Splash, run by Andy Chen and Nick Hirning. It is 
+meant to serve as a simplified model of how password hashing and SQL injection 
+can work. The code creates a dummy website "Anaflow Bank" whose data can be 
+compromised with a SQL injection.
 
 
 Get Started
